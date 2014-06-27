@@ -4,7 +4,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameData;
 import me.tyler15555.deathchest.util.ConfigHelper;
-
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
@@ -21,16 +21,14 @@ public class DCEventHandler {
 	@SubscribeEvent
 	public void onPlayerDrops(PlayerDropsEvent event) {
 		boolean saveItems = false;
+		int counter = 0;
 		if(!ConfigHelper.requireSavingStone) {
 			saveItems = true;
 		}
 		
-		for(int i = 0; i < event.drops.size(); i++) {
-			
-			ItemStack droppedStack = event.drops.get(i).getEntityItem();
-			
-			if(droppedStack.getItem() == DeathChest.savingStone) {
-				event.drops.remove(i);
+		for(EntityItem droppedStack : event.drops) {
+			if(droppedStack.getEntityItem().getItem() == DeathChest.savingStone) {
+				event.drops.remove(droppedStack);
 				saveItems = true;
 			}
 		}
@@ -44,12 +42,15 @@ public class DCEventHandler {
 			
 			world.setBlock(posX, posY, posZ, Blocks.chest, 0, 2);
 			TileEntityChest chest = (TileEntityChest) world.getTileEntity(posX, posY, posZ);
-			for(int j = 0; j < event.drops.size(); j++) {
-				if(j > chest.getSizeInventory()) {
+			for(EntityItem droppedItemEntity : event.drops) {
+				counter++;
+				ItemStack droppedItem = droppedItemEntity.getEntityItem();
+				
+				if(counter > chest.getSizeInventory()) {
 					return;
 				} else {
-					chest.setInventorySlotContents(j, event.drops.get(j).getEntityItem());
-					event.drops.get(j).setDead();
+					chest.setInventorySlotContents(counter - 1, droppedItem);
+					droppedItemEntity.setDead();
 				}
 			}
 		}
