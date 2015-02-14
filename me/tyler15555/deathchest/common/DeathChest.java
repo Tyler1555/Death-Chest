@@ -7,18 +7,26 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import org.apache.logging.log4j.Level;
 
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
+
 
 @Mod(modid = "DeathChest", name = "Death Chest", version = MinecraftForge.MC_VERSION)
 public class DeathChest {
+	
+	@Instance("DeathChest")
+	public static DeathChest instance;
+	@SidedProxy(clientSide = "me.tyler15555.deathchest.client.ClientProxy", serverSide = "me.tyler15555.deathchest.common.CommonProxy")
+	public static CommonProxy proxy;
 
 	public static ItemSavingStone savingStone = new ItemSavingStone();
 	
@@ -38,6 +46,8 @@ public class DeathChest {
 	@EventHandler
 	public void loadMod(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new DCEventHandler());
+		
+		proxy.registerRenderers();
 		
 		GameRegistry.addRecipe(new ItemStack(this.savingStone), " s ", "sgs", " s ", 's', Blocks.stone, 'g', Items.gold_ingot);
 	}

@@ -13,7 +13,6 @@ public class ItemSavingStone extends Item {
 
 	public ItemSavingStone() {
 		setUnlocalizedName("savingStone");
-		setTextureName("deathchest:saving_stone");
 		setCreativeTab(CreativeTabs.tabMisc);
 	}
 	

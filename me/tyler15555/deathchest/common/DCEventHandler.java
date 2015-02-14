@@ -1,16 +1,17 @@
 package me.tyler15555.deathchest.common;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.registry.GameData;
 import me.tyler15555.deathchest.util.ConfigHelper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+
 
 public class DCEventHandler {
 
@@ -40,8 +41,8 @@ public class DCEventHandler {
 			
 			World world = event.entityPlayer.worldObj;
 			
-			world.setBlock(posX, posY, posZ, Blocks.chest, 0, 2);
-			TileEntityChest chest = (TileEntityChest) world.getTileEntity(posX, posY, posZ);
+			world.setBlockState(new BlockPos(posX, posY, posZ), Blocks.chest.getDefaultState(), 2);
+			TileEntityChest chest = (TileEntityChest) world.getTileEntity(new BlockPos(posX, posY, posZ));
 			for(EntityItem droppedItemEntity : event.drops) {
 				counter++;
 				ItemStack droppedItem = droppedItemEntity.getEntityItem();
